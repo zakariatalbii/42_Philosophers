@@ -6,7 +6,7 @@
 /*   By: zatalbi <zatalbi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 12:56:28 by zatalbi           #+#    #+#             */
-/*   Updated: 2025/08/19 18:59:51 by zatalbi          ###   ########.fr       */
+/*   Updated: 2025/08/19 19:38:49 by zatalbi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static void	ft_eating(t_philo *philo)
 {
 	ft_l_meal_mx(philo, 1);
 	ft_print_mx(philo, "is eating", 0);
-	ft_n_meal_mx(philo, 1);
 	ft_l_meal_mx(philo, 1);
 	ft_sleep_ms(philo->data->t_eat);
+	ft_n_meal_mx(philo, 1);
 }
 
 static void	*ft_philo_r(void *arg)
@@ -27,11 +27,10 @@ static void	*ft_philo_r(void *arg)
 
 	philo = (t_philo *)arg;
 	ft_l_meal_mx(philo, 1);
-	if (philo->id % 2 == 0)
-	{
+	if (philo->id % 2 == 0 || philo->id == philo->data->n_philos)
 		ft_print_mx(philo, "is thinking", 0);
+	if (philo->id % 2 == 0)
 		ft_sleep_ms(1);
-	}
 	while (!ft_end_mx(philo->data, 0))
 	{
 		pthread_mutex_lock(philo->r_fork);
