@@ -6,7 +6,7 @@
 /*   By: zatalbi <zatalbi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 12:51:37 by zatalbi           #+#    #+#             */
-/*   Updated: 2025/08/16 15:39:31 by zatalbi          ###   ########.fr       */
+/*   Updated: 2025/08/18 16:37:21 by zatalbi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,17 @@ static int	ft_invalid_inputs(int argc, char **argv)
 	return (0);
 }
 
-int	ft_inputs(t_tools *tls, int argc, char **argv)
+int	ft_inputs(t_data *data, int argc, char **argv)
 {
 	if (ft_invalid_inputs(argc, argv))
 		return (-1);
-	tls->inp.n_philos = (int)ft_atol(argv[1]);
-	tls->inp.t_die = (int)ft_atol(argv[2]);
-	tls->inp.t_eat = (int)ft_atol(argv[3]);
-	tls->inp.t_sleep = (int)ft_atol(argv[4]);
+	data->n_philos = (int)ft_atol(argv[1]);
+	data->t_die = (int)ft_atol(argv[2]);
+	data->t_eat = (int)ft_atol(argv[3]);
+	data->t_sleep = (int)ft_atol(argv[4]);
 	if (argc == 6)
-		tls->inp.n_times_eat = (int)ft_atol(argv[5]);
+		data->n_times_eat = (int)ft_atol(argv[5]);
 	else
-		tls->inp.n_times_eat = -1;
+		data->n_times_eat = -1;
 	return (0);
 }

@@ -6,34 +6,37 @@
 /*   By: zatalbi <zatalbi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 12:51:28 by zatalbi           #+#    #+#             */
-/*   Updated: 2025/08/16 15:39:27 by zatalbi          ###   ########.fr       */
+/*   Updated: 2025/08/19 02:55:41 by zatalbi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_philos_init(t_philo **philos, pthread_mutex_t **forks, t_tools *tls)
+int	ft_philos_init(t_data *data)
 {
-	int	v;
+	int				v;
 
-	*philos = (t_philo *)malloc(sizeof(t_philo) * tls->inp.n_philos);
-	if (*philos)
-		*forks = malloc(sizeof(pthread_mutex_t) * tls->inp.n_philos);
-	if (!*philos || !*forks)
+	data->philos = (t_philo *)malloc(sizeof(t_philo) * data->n_philos);
+	if (data->philos)
+		data->forks = malloc(sizeof(pthread_mutex_t) * data->n_philos);
+	if (!data->philos || !data->forks)
 		return (ft_putstr_fd("malloc: Cannot allocate memory\n", 2),
-			free(*philos), -1);
+			free(data->philos), -1);
 	v = -1;
-	while (++v < tls->inp.n_philos)
+	while (++v < data->n_philos)
 	{
-		(*philos)[v].id = v + 1;
-		(*philos)[v].l_meal = 0;
-		(*philos)[v].tls = tls;
-		(*philos)[v].r_fork = &(*forks)[v];
-		if (v + 1 == tls->inp.n_philos)
-			(*philos)[v].l_fork = *forks;
+		data->philos[v].id = v + 1;
+		data->philos[v].l_meal = ft_timeval_ms();
+		data->philos[v].n_meal = 0;
+		data->philos[v].data = data;
+		data->philos[v].r_fork = &data->forks[v];
+		if (v + 1 == data->n_philos)
+			data->philos[v].l_fork = data->forks;
 		else
-			(*philos)[v].l_fork = &(*forks)[v + 1];
-		pthread_mutex_init(&(*forks)[v], NULL);
+			data->philos[v].l_fork = &data->forks[v + 1];
+		pthread_mutex_init(&data->forks[v], NULL);
+		pthread_mutex_init(&data->philos[v].l_meal_mx, NULL);
+		pthread_mutex_init(&data->philos[v].n_meal_mx, NULL);
 	}
 	return (0);
 }
