@@ -6,7 +6,7 @@
 /*   By: zatalbi <zatalbi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 12:56:28 by zatalbi           #+#    #+#             */
-/*   Updated: 2025/08/19 02:56:48 by zatalbi          ###   ########.fr       */
+/*   Updated: 2025/08/19 17:33:29 by zatalbi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,16 @@ t_time	ft_l_meal_mx(t_philo *philo, int flag)
 	l_meal = philo->l_meal;
 	pthread_mutex_unlock(&philo->l_meal_mx);
 	return (l_meal);
+}
+
+int	ft_n_meal_mx(t_philo *philo, int flag)
+{
+	int	n_meal;
+
+	pthread_mutex_lock(&philo->n_meal_mx);
+	if (flag)
+		philo->n_meal++;
+	n_meal = philo->n_meal;
+	pthread_mutex_unlock(&philo->n_meal_mx);
+	return (n_meal);
 }

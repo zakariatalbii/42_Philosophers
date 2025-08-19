@@ -6,7 +6,7 @@
 /*   By: zatalbi <zatalbi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 12:50:57 by zatalbi           #+#    #+#             */
-/*   Updated: 2025/08/19 01:34:39 by zatalbi          ###   ########.fr       */
+/*   Updated: 2025/08/19 18:43:33 by zatalbi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ struct s_philo
 };
 
 void	ft_putstr_fd(char *s, int fd);
-size_t	ft_strlen(const char *s);
 long	ft_atol(const char *str);
 
 t_time	ft_timeval_ms(void);
@@ -65,9 +64,10 @@ void	ft_sleep_ms(unsigned int ms);
 int		ft_end_mx(t_data *data, int flag);
 void	ft_print_mx(t_philo *philo, char *stat, int died);
 t_time	ft_l_meal_mx(t_philo *philo, int flag);
+int		ft_n_meal_mx(t_philo *philo, int flag);
 
 int		ft_inputs(t_data *data, int argc, char **argv);
 int		ft_philos_init(t_data *data);
-void	ft_simulation(t_data *data);
+int		ft_simulation(t_data *data);
 
 #endif

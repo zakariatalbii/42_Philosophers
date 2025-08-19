@@ -6,7 +6,7 @@
 /*   By: zatalbi <zatalbi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 12:51:28 by zatalbi           #+#    #+#             */
-/*   Updated: 2025/08/19 02:55:41 by zatalbi          ###   ########.fr       */
+/*   Updated: 2025/08/19 18:26:35 by zatalbi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_philos_init(t_data *data)
 {
-	int				v;
+	int	v;
 
 	data->philos = (t_philo *)malloc(sizeof(t_philo) * data->n_philos);
 	if (data->philos)

@@ -6,7 +6,7 @@
 /*   By: zatalbi <zatalbi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 12:50:28 by zatalbi           #+#    #+#             */
-/*   Updated: 2025/08/16 15:39:07 by zatalbi          ###   ########.fr       */
+/*   Updated: 2025/08/19 18:43:42 by zatalbi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,6 @@ void	ft_putstr_fd(char *s, int fd)
 		return ;
 	while (*s)
 		write(fd, s++, 1);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
 }
 
 long	ft_atol(const char *str)
