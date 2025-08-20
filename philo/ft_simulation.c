@@ -6,7 +6,7 @@
 /*   By: zatalbi <zatalbi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 12:56:28 by zatalbi           #+#    #+#             */
-/*   Updated: 2025/08/19 19:38:49 by zatalbi          ###   ########.fr       */
+/*   Updated: 2025/08/20 18:39:30 by zatalbi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ static void	*ft_philo_r(void *arg)
 
 	philo = (t_philo *)arg;
 	ft_l_meal_mx(philo, 1);
-	if (philo->id % 2 == 0 || philo->id == philo->data->n_philos)
-		ft_print_mx(philo, "is thinking", 0);
 	if (philo->id % 2 == 0)
 		ft_sleep_ms(1);
 	while (!ft_end_mx(philo->data, 0))
@@ -58,12 +56,6 @@ static void	*ft_monitor_r(void *arg)
 	data = (t_data *)arg;
 	while (1)
 	{
-		v = -1;
-		while (++v < data->n_philos)
-			if (ft_timeval_ms() - ft_l_meal_mx(&data->philos[v], 0)
-				>= data->t_die)
-				return (ft_end_mx(data, 1),
-					ft_print_mx(&data->philos[v], "died", 1), NULL);
 		if (data->n_times_eat != -1)
 		{
 			v = -1;
@@ -73,8 +65,39 @@ static void	*ft_monitor_r(void *arg)
 					&& ++count && count == data->n_philos)
 					return (ft_end_mx(data, 1), NULL);
 		}
+		v = -1;
+		while (++v < data->n_philos)
+			if (ft_timeval_ms() - ft_l_meal_mx(&data->philos[v], 0)
+				>= data->t_die)
+				return (ft_end_mx(data, 1),
+					ft_print_mx(&data->philos[v], "died", 1), NULL);
 	}
 	return (NULL);
+}
+
+static int	ft_error_join(t_data *data, int n, int flag)
+{
+	t_philo	*philos;
+	int		v;
+
+	ft_end_mx(data, 1);
+	philos = data->philos;
+	if (flag >= 1)
+	{
+		v = -1;
+		while (++v < (n * (flag == 1) + data->n_philos * (flag != 1))
+			/ 2 + (data->n_philos % 2 == 1))
+			if (pthread_join(philos[v * 2].p_th_id, NULL))
+				break ;
+	}
+	if (flag >= 2)
+	{
+		v = -1;
+		while (++v < (n * (flag == 2) + data->n_philos * (flag != 2)) / 2)
+			if (pthread_join(philos[v * 2 + 1].p_th_id, NULL))
+				break ;
+	}
+	return (ft_putstr_fd("pthread_create failed\n", 2), 1);
 }
 
 int	ft_simulation(t_data *data)
@@ -83,21 +106,25 @@ int	ft_simulation(t_data *data)
 	int		v;
 
 	philos = data->philos;
-	pthread_mutex_init(&data->print_mx, NULL);
-	pthread_mutex_init(&data->end_mx, NULL);
-	data->end = 0;
-	data->start = ft_timeval_ms();
+	(pthread_mutex_init(&data->end_mx, NULL), data->end = 0);
+	(pthread_mutex_init(&data->print_mx, NULL), data->start = ft_timeval_ms());
 	v = -1;
+	while (++v < data->n_philos / 2 + (data->n_philos % 2 == 1))
+		if (pthread_create(&philos[v * 2].p_th_id, NULL, ft_philo_r,
+				&philos[v * 2]))
+			return (ft_error_join(data, v * 2, 1));
+	v = -1;
+	while (++v < data->n_philos / 2)
+		if (pthread_create(&philos[v * 2 + 1].p_th_id, NULL, ft_philo_r,
+				&philos[v * 2 + 1]))
+			return (ft_error_join(data, v * 2 + 1, 2));
 	if (pthread_create(&data->m_th_id, NULL, ft_monitor_r, data))
-		return (ft_putstr_fd("pthread_create failed\n", 2), -1);
-	while (++v < data->n_philos)
-		if (pthread_create(&philos[v].p_th_id, NULL, ft_philo_r, &philos[v]))
-			return (ft_putstr_fd("pthread_create failed\n", 2), -1);
+		return (ft_error_join(data, 0, 3));
 	v = -1;
-	if (pthread_join(data->m_th_id, NULL))
-		return (ft_putstr_fd("pthread_join failed\n", 2), -1);
 	while (++v < data->n_philos)
 		if (pthread_join(philos[v].p_th_id, NULL))
-			return (ft_putstr_fd("pthread_join failed\n", 2), -1);
+			return (ft_putstr_fd("pthread_join failed\n", 2), 1);
+	if (pthread_join(data->m_th_id, NULL))
+		return (ft_putstr_fd("pthread_join failed\n", 2), 1);
 	return (0);
 }

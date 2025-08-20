@@ -4,7 +4,7 @@ OBJ = $(SRC:.c=.o)
 
 NAME = philo
 
-CC = cc -g #-fsanitize=thread -Wall -Wextra -Werror
+CC = cc -Wall -Wextra -Werror -g -fsanitize=thread 
 RM = rm -f
 
 %.o: %.c philo.h
