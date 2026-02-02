@@ -1,14 +1,15 @@
-SRC = philo.c ft_inputs.c ft_philos_init.c ft_simulation.c ft_time.c mutexes_utils.c utils.c
+SRC = src/philo.c src/ft_inputs.c src/ft_philos_init.c src/ft_simulation.c src/ft_time.c src/mutexes_utils.c src/utils.c
 
 OBJ = $(SRC:.c=.o)
 
 NAME = philo
 
 CC = cc -Wall -Wextra -Werror
+
 RM = rm -f
 
-%.o: %.c philo.h
-	$(CC) -c $< -o $@
+%.o: %.c include/philo.h
+	$(CC) -c $< -Iinclude -o $@
 
 all: $(NAME)
 
